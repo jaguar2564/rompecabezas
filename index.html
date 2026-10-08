@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Aniversario Any</title>
+    <style>
+        :root {
+            --background: #110712;
+            --card-bg: rgba(29, 14, 33, 0.65);
+            --card-border: rgba(236, 72, 153, 0.15);
+            --btn-bg: #2a152e;
+            --btn-hover: #3d1f42;
+            --pink-accent: #ff527b;
+            --text-white: #ffffff;
+            --text-muted: #a78bfa;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--background);
+            background-image: radial-gradient(circle, #220e26 0%, #0d050e 100%);
+            color: var(--text-white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .terminal-container {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .lock-wrapper {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .lock-icon-svg {
+            width: 45px;
+            height: 45px;
+            fill: none;
+            stroke: var(--pink-accent);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 8px rgba(255, 82, 123, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .lock-shackle {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: 12px 14px;
+        }
+
+        .unlocked .lock-shackle {
+            transform: translateY(-4px) rotateY(180deg);
+            stroke: #10b981;
+        }
+
+        .unlocked .lock-body {
+            stroke: #10b981;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-white);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #4a2852;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .dot.active {
+            background: var(--pink-accent);
+            border-color: var(--pink-accent);
+            box-shadow: 0 0 10px rgba(255, 82, 123, 0.6);
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            justify-items: center;
+            max-width: 260px;
+            margin: 0 auto;
+        }
+
+        .key {
+            background: var(--btn-bg);
+            color: var(--text-white);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key:hover {
+            background: var(--btn-hover);
+        }
+
+        .key:active {
+            transform: scale(0.92);
+        }
+
+        .key.action-clear {
+            color: #ef4444;
+        }
+
+        .key.action-enter {
+            color: #10b981;
+        }
+
+        .message-box {
+            margin-top: 20px;
+            font-size: 13px;
+            min-height: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .error { color: #f87171; }
+        .success { color: #34d399; }
+
+        * { box-sizing: border-box; }
+
+        button {
+            font-family: inherit;
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: none;
+            background: #ff527b;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease, opacity 0.15s ease;
+        }
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.96); }
+        button.secondary { background: var(--btn-bg); color: var(--text-muted); border: 1px solid var(--card-border); }
+
+        .tile {
+            background-repeat: no-repeat;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .tile:hover { transform: scale(0.97); }
+        .tile.selected {
+            outline: 3px solid var(--pink-accent);
+            outline-offset: -3px;
+            box-shadow: 0 0 14px rgba(255, 82, 123, 0.8);
+            transform: scale(0.94);
+            z-index: 2;
+        }
+        .tile-number {
+            position: absolute;
+            top: 4px; left: 4px;
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        .modal-content h2 { margin-top: 0; }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <div class="lock-wrapper" id="lock-container">
+        <svg class="lock-icon-svg" viewBox="0 0 44 44">
+            <path class="lock-shackle" d="M14 19V13C14 8.58 17.58 5 22 5C26.42 5 30 8.58 30 13V19" />
+            <rect class="lock-body" x="10" y="19" width="24" height="20" rx="5" />
+            <circle cx="22" cy="27" r="2" fill="currentColor" />
+            <path d="M22 29V33" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+    </div>
+
+    <h1>Hola Any, ¿quieres jugar un juego?</h1>
+    <p>Ingresa el código secreto para comenzar</p>
+    
+    <div class="dots-container" id="dots-box">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+    
+    <div class="keypad">
+        <button class="key num-key" data-value="1">1</button>
+        <button class="key num-key" data-value="2">2</button>
+        <button class="key num-key" data-value="3">3</button>
+        
+        <button class="key num-key" data-value="4">4</button>
+        <button class="key num-key" data-value="5">5</button>
+        <button class="key num-key" data-value="6">6</button>
+        
+        <button class="key num-key" data-value="7">7</button>
+        <button class="key num-key" data-value="8">8</button>
+        <button class="key num-key" data-value="9">9</button>
+        
+        <button class="key action-clear" id="clear-btn">C</button>
+        <button class="key num-key" data-value="0">0</button>
+        <button class="key action-enter" id="enter-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <div id="message" class="message-box"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
